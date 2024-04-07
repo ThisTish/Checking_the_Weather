@@ -6,9 +6,12 @@ fiveDayArea = $('#five-day-cards-container')
 
 // retrievedCity = city's info retrieved from weatherAPI
 
+//? get params?
+
+
 function getCities() {
 	let retrievedCities = (JSON.parse(localStorage.getItem('cities')))
-	if(!cities){
+	if(!retrievedCities){
 		retrievedCities= []
 	}
 	return retrievedCities
@@ -17,18 +20,17 @@ function getCities() {
 function saveCities() {
 	let cities = getCities()
 	const searchedCity = searchInput.val()
-	if(!searchedCity//a valid city//
-	){
+	if(!searchedCity){
 		alert(`Couldn't find ${searchedCity}.
 		Please try again.`)
 		return cities
 	}
-
-	else(!cities.include(searchedCity)){
+	
+	else if(!cities.includes(searchedCity)){
 		cities.push(searchedCity)
 	}
 	localStorage.setItem('cities', JSON.stringify(cities))
-
+	
 	return cities
 }
 
@@ -40,30 +42,66 @@ function displaySavedButtons(){
 			addClass: "btn",
 			click: showCity()
 		})
-		(cityContainer).append($('<li>').append(city))
+		cityContainer.append($('<li>')).append(cityButton)
+
 	}	
 }
 
-
-// todo READ WEATHER API DOCUMENT***********************************************
-
-function displayTodaysCard (){
-	//todo retrievedCity splice info needed. create card. append to todayCardArea
+function showCity (body){
+	displayTodaysCard(body)
+	displayForcastCards(body)
 }
 
-function displayForcastCards(){
-	// todo retrievedCity splice info needed. create card for each day. append to a list. append fiveDayArea
+function fetchingApi(searchCity){
+	let queryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=f04d4021fe7f253532227cadb8b2c067`
+
+	fetch(queryUrl)
+		.then(function(response){
+			if(!response.ok){
+				throw response.json()
+			}
+			return response.json()
+		})
+		.then(function(cityResults){
+			console.log(cityResults)
+			displayTodaysCard(cityResults)
+
+		})
+		.catch((err) => console.error(`fetch problem: ${err}`))
+}
+
+function displayTodaysCard (cityResults){
+	console.log(cityResults.city.name)
+	const todayResults = cityResults.list[0]
+	console.log(todayResults.dt_txt)
+	console.log(todayResults.main.temp)
+	console.log(todayResults.weather[0].icon)
+	console.log(todayResults.main.humidity)
+	console.log(todayResults.wind.speed)
+
+	return
+}
+
+function displayForcastCards(cityResults){
+	for(let result of cityResults){
+		
+	}
 
 }
+
 
 // todo event listener for 'submit'
+$('form').on('submit', function(event){
+	event.preventDefault()
 	// request info from weather.com
-	todaysCard()
-	displayForcastCards()
+	// todaysCard()
+	// displayForcastCards()
 	saveCities()
-	
+	fetchingApi(searchInput.val())
+	// displaySavedButtons()
+})
 
 // todo when
-(document).ready(function){
+$('document').ready(function(){
 	displaySavedButtons()
-}
+})
