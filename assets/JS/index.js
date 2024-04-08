@@ -135,6 +135,9 @@ function forcastApi(forcastedCity){
 	}
 
 function displayForcastCards(cityForcast){
+
+	while(cityForcast.list.length >= 8){
+
 	const oneDay = cityForcast.list.splice(0,8)
 	console.log(oneDay)
 
@@ -213,7 +216,10 @@ function displayForcastCards(cityForcast){
 	cardBody.append(date, icon, details)
 	forcastCard.append(cardBody)
 	todaysCardArea.append(forcastCard)
-	return
+	
+
+	}
+
 }
 
 
