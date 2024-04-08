@@ -51,7 +51,7 @@ function displaySavedButtons(){
 // }
 
 function fetchingApi(searchCity){
-	let todayQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=f04d4021fe7f253532227cadb8b2c067`
+	let todayQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&units=imperial&appid=f04d4021fe7f253532227cadb8b2c067`
 
 	fetch(todayQueryUrl)
 		.then(function(response){
@@ -89,15 +89,12 @@ function displayTodaysCard (cityResults){
 		console.log(cityResults.dt)
 		
 		const icon = $('<i>')
-		// todo not exactly correct, look into
 		icon.addClass(`owf owf-${cityResults.weather[0].id} owf-2x`)
-		// todo look how to properly display this
 		console.log(cityResults.weather[0].id)
 		
 		const details = $('<ul>')
 		
 		const temp = $('<li>')
-		// todo convert to display farenheit
 		temp.text(cityResults.main.temp)
 		console.log(cityResults.main.temp)
 		
@@ -119,81 +116,105 @@ function displayTodaysCard (cityResults){
 }
 
 
-	function forcastApi(forcastedCity){
-		let forcastQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${forcastedCity}&appid=f04d4021fe7f253532227cadb8b2c067`
-	
-		fetch(forcastQueryUrl)
-			.then(function(response){
-				if(!response.ok){
-					throw response.json()
-				}
-				return response.json()
-			})
-			.then(function(cityForcast){
-				console.log(cityForcast)
-				displayForcastCards(cityForcast)
-				
-			})
-			.catch((err) => console.error(`fetch problem: ${err}`))
-	}
-	
-		
-	
-	function displayForcastCards(cityForcast){
+function forcastApi(forcastedCity){
+	let forcastQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${forcastedCity}&units=imperial&appid=f04d4021fe7f253532227cadb8b2c067`
 
-		const oneDay = cityForcast.list.splice(0,8)
-		console.log(oneDay)
-
-		
-		// * all working for first array
-			const forcastCard = $('<div>')
-			forcastCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
-			
-			const cardBody = $('<div>')
-			cardBody.addClass('card-body')
-
-			// // todo switch 0 to i when looping
-			const dayResults = oneDay[0]
-			
-			// // todo format date
-			const date = $('<h4>')
-			date.text(dayResults.dt)
-			console.log(dayResults.dt)
-			
-			const icon = $('<i>')
-			icon.addClass(`owf owf-${dayResults.weather[0].id} owf-2x`)
-			console.log(dayResults.weather[0].id)
-			
-			const details = $('<ul>')
-			
-			let tempAvg = 0
-
-			for(let i = 0; 0 < oneDay.length; i++){
-				
+	fetch(forcastQueryUrl)
+		.then(function(response){
+			if(!response.ok){
+				throw response.json()
 			}
-
-			// todo convert to display farenheit
-			const temp = $('<li>')
-			temp.text(dayResults.main.temp)
-			console.log(dayResults.main.temp)
+			return response.json()
+		})
+		.then(function(cityForcast){
+			console.log(cityForcast)
+			displayForcastCards(cityForcast)
 			
-			const humidity = $('<li>')
-			humidity.text(dayResults.main.humidity)
-			console.log(dayResults.main.humidity)
-			
-			const wind = $('<li>')
-			wind.text(dayResults.wind.speed)
-			console.log(dayResults.wind.speed)
-			
-			details.append(temp, humidity, wind)
-			cardBody.append(date, icon, details)
-			forcastCard.append(cardBody)
-			todaysCardArea.append(forcastCard)
-			return
+		})
+		.catch((err) => console.error(`fetch problem: ${err}`))
 	}
+
+function displayForcastCards(cityForcast){
+	const oneDay = cityForcast.list.splice(0,8)
+	console.log(oneDay)
+
+	// * all working for first array, except for design
+	const forcastCard = $('<div>')
+	forcastCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
+	
+	const cardBody = $('<div>')
+	cardBody.addClass('card-body')
+	
+	const dayDetails = oneDay[0]
+
+	// todo format date
+	const date = $('<h4>')
+	date.text(dayDetails.dt)
+	
+	const icon = $('<i>')
+	icon.addClass(`owf owf-${dayDetails.weather[0].id} owf-2x`)
+	
+	const details = $('<ul>')
+	
+
+	
+	function findTempAverage(oneDay){
+		let tempSum = 0
 		
+		for(let i = 0; i < oneDay.length; i++){
+			let tempData = oneDay[i].main.temp
+			tempSum += tempData
+		}
+	
+		let tempAvg = tempSum/8
+	
+		return tempAvg
+	}
+	
+	const temp = $('<li>')
+	temp.text(findTempAverage(oneDay))
 
+	
+	function findHumidAverage(oneDay){
+		let humidSum = 0
+		
+		for(let i = 0; i < oneDay.length; i++){
+			let humidData = oneDay[i].main.humidity
+			humidSum += humidData
+		}
+	
+		let humidAvg = humidSum/8
+	
+		return humidAvg
+	}
+	
+	const humidity = $('<li>')
+	humidity.text(findHumidAverage(oneDay))
+	
 
+	function findWindAverage(oneDay){
+		let windSum = 0
+		
+		for(let i = 0; i < oneDay.length; i++){
+			let windData = oneDay[i].wind.speed
+			windSum += windData
+		}
+		
+		let windAvg = windSum/8
+		
+		return windAvg
+	}
+	
+	const wind = $('<li>')
+	wind.text(findWindAverage(oneDay))
+
+		
+	details.append(temp, humidity, wind)
+	cardBody.append(date, icon, details)
+	forcastCard.append(cardBody)
+	todaysCardArea.append(forcastCard)
+	return
+}
 
 
 
