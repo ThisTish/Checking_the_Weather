@@ -69,8 +69,7 @@ function displayTodaysCard (cityResults){
 	cityName.text(cityResults.name)
 	
 	const date = $('<h4>')
-	// todo format date
-	date.text(cityResults.dt)
+	date.text(dayjs.unix(cityResults.dt).format('MM/DD/YYYY'))
 	
 	const icon = $('<i>')
 	icon.addClass(`owf owf-${cityResults.weather[0].id} owf-2x`)
@@ -120,9 +119,8 @@ function displayForcastCards(cityForcast){
 	
 	const dayDetails = oneDay[0]
 
-	// todo format date
 	const date = $('<h4>')
-	date.text(dayDetails.dt)
+	date.text(dayjs.unix(dayDetails.dt).format('MM/DD/YYYY'))
 	
 	const icon = $('<i>')
 	icon.addClass(`owf owf-${dayDetails.weather[0].id} owf-2x`)
