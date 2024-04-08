@@ -77,13 +77,13 @@ function displayTodaysCard (cityResults){
 	const details = $('<ul>')
 	
 	const temp = $('<li>')
-	temp.text(cityResults.main.temp)
+	temp.text(`Temperature: ${Math.round(cityResults.main.temp)}\u00B0F`)
 	
 	const humidity = $('<li>')
-	humidity.text(cityResults.main.humidity)
+	humidity.text(`Humidity: ${cityResults.main.humidity}%`)
 	
 	const wind = $('<li>')
-	wind.text(cityResults.wind.speed)
+	wind.text(`Wind: ${Math.round(cityResults.wind.speed)} MPH`)
 	
 	details.append(temp, humidity, wind)
 	cardBody.append(cityName, date, icon, details)
@@ -127,7 +127,6 @@ function displayForcastCards(cityForcast){
 	
 	const details = $('<ul>')
 	
-	
 	function findTempAverage(oneDay){
 		let tempSum = 0
 		for(let i = 0; i < oneDay.length; i++){
@@ -138,7 +137,7 @@ function displayForcastCards(cityForcast){
 		return tempAvg
 	}
 	const temp = $('<li>')
-	temp.text(findTempAverage(oneDay))
+	temp.text(`Temperature: ${Math.round(findTempAverage(oneDay))}\u00B0F`)
 
 	function findHumidAverage(oneDay){
 		let humidSum = 0
@@ -150,7 +149,7 @@ function displayForcastCards(cityForcast){
 		return humidAvg
 	}
 	const humidity = $('<li>')
-	humidity.text(findHumidAverage(oneDay))
+	humidity.text(`Humidity: ${Math.round(findHumidAverage(oneDay))}%`)
 	
 	function findWindAverage(oneDay){
 		let windSum = 0
@@ -162,7 +161,8 @@ function displayForcastCards(cityForcast){
 			return windAvg
 	}
 	const wind = $('<li>')
-	wind.text(findWindAverage(oneDay))
+	wind.text(`Wind: ${Math.round(findWindAverage(oneDay))} MPH`)
+	// wind.text(findWindAverage(oneDay))
 	
 	details.append(temp, humidity, wind)
 	cardBody.append(date, icon, details)
