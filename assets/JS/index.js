@@ -51,9 +51,9 @@ function displaySavedButtons(){
 // }
 
 function fetchingApi(searchCity){
-	let queryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&appid=f04d4021fe7f253532227cadb8b2c067`
+	let todayQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=f04d4021fe7f253532227cadb8b2c067`
 
-	fetch(queryUrl)
+	fetch(todayQueryUrl)
 		.then(function(response){
 			if(!response.ok){
 				throw response.json()
@@ -63,76 +63,140 @@ function fetchingApi(searchCity){
 		.then(function(cityResults){
 			console.log(cityResults)
 			displayTodaysCard(cityResults)
-			displayForcastCards(cityResults)
-
+			
 		})
 		.catch((err) => console.error(`fetch problem: ${err}`))
 }
 
+
+
+
+
 function displayTodaysCard (cityResults){
 	const todaysCard = $('<div>')
-	todaysCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
-
-	const cardBody = $('<div>')
-	cardBody.addClass('card-body')
-
-	const cityName = $('<h3>')
-	console.log(cityResults.city.name)
-	cityName.text(cityResults.city.name)
-
-	const todayResults = cityResults.list[0]
-	
-	const date = $('<h4>')
-	// todo format date
-	date.text(todayResults.dt_txt)
-	console.log(todayResults.dt_txt)
-
-	const icon = $('<i>')
-	// todo not exactly correct, look into
-	icon.class(owf-lg)
-	icon.content(todayResults.weather[0].icon)
-	// todo look how to properly display this
-	console.log(todayResults.weather[0].icon)
-
-	const details = $('<ul>')
-
-	const temp = $('<li>')
-	// todo convert to display farenheit
-	temp.text(todayResults.main.temp)
-	console.log(todayResults.main.temp)
-
-	const humidity = $('<li>')
-	humidity.text(todayResults.main.humidity)
-	console.log(todayResults.main.humidity)
-
-	const wind = $('<li>')
-	wind.text(todayResults.wind.speed)
-	console.log(todayResults.wind.speed)
-
-	details.append(temp, humidity, wind)
-	cardBody.append(cityName, date, icon, details)
-	todaysCard.append(cardBody)
-	todaysCardArea.append(todaysCard)
-	return
-}
-// ? use dayjs? go through 1 by one and add a day each time?
-function displayForcastCards(cityResults){
-	for(let i = 1; i < 40; i++){
-		const forcast = cityResults.list[i]
-
-		// ?this might work with some tweeking
-		if([i].includes('18:00:00')){
+		todaysCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
+		
+		const cardBody = $('<div>')
+		cardBody.addClass('card-body')
+		
+		const cityName = $('<h3>')
+		console.log(cityResults.name)
+		cityName.text(cityResults.name)
+				
+		const date = $('<h4>')
+		// todo format date
+		date.text(cityResults.dt)
+		console.log(cityResults.dt)
+		
+		const icon = $('<i>')
+		// todo not exactly correct, look into
+		icon.addClass(`owf owf-${cityResults.weather[0].id} owf-2x`)
+		// todo look how to properly display this
+		console.log(cityResults.weather[0].id)
+		
+		const details = $('<ul>')
+		
+		const temp = $('<li>')
+		// todo convert to display farenheit
+		temp.text(cityResults.main.temp)
+		console.log(cityResults.main.temp)
+		
+		const humidity = $('<li>')
+		humidity.text(cityResults.main.humidity)
+		console.log(cityResults.main.humidity)
+		
+		const wind = $('<li>')
+		wind.text(cityResults.wind.speed)
+		console.log(cityResults.wind.speed)
+		
+		details.append(temp, humidity, wind)
+		cardBody.append(cityName, date, icon, details)
+		todaysCard.append(cardBody)
+		todaysCardArea.append(todaysCard)
+		return
 		console.log(forcast.dt_txt)
 		console.log(forcast.main.temp)
-		console.log(forcast.weather[0].icon)
-		console.log(forcast.main.humidity)
-		console.log(forcast.wind.speed)
-		}
-	}
-
-
-
 }
+
+
+	function forcastApi(forcastedCity){
+		let forcastQueryUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${forcastedCity}&appid=f04d4021fe7f253532227cadb8b2c067`
+	
+		fetch(forcastQueryUrl)
+			.then(function(response){
+				if(!response.ok){
+					throw response.json()
+				}
+				return response.json()
+			})
+			.then(function(cityForcast){
+				console.log(cityForcast)
+				displayForcastCards(cityForcast)
+				
+			})
+			.catch((err) => console.error(`fetch problem: ${err}`))
+	}
+	
+		
+	
+	function displayForcastCards(cityForcast){
+
+		const oneDay = cityForcast.list.splice(0,8)
+		console.log(oneDay)
+
+		
+		// * all working for first array
+			const forcastCard = $('<div>')
+			forcastCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
+			
+			const cardBody = $('<div>')
+			cardBody.addClass('card-body')
+
+			// // todo switch 0 to i when looping
+			const dayResults = oneDay[0]
+			
+			// // todo format date
+			const date = $('<h4>')
+			date.text(dayResults.dt)
+			console.log(dayResults.dt)
+			
+			const icon = $('<i>')
+			icon.addClass(`owf owf-${dayResults.weather[0].id} owf-2x`)
+			console.log(dayResults.weather[0].id)
+			
+			const details = $('<ul>')
+			
+			let tempAvg = 0
+
+			for(let i = 0; 0 < oneDay.length; i++){
+				
+			}
+
+			// todo convert to display farenheit
+			const temp = $('<li>')
+			temp.text(dayResults.main.temp)
+			console.log(dayResults.main.temp)
+			
+			const humidity = $('<li>')
+			humidity.text(dayResults.main.humidity)
+			console.log(dayResults.main.humidity)
+			
+			const wind = $('<li>')
+			wind.text(dayResults.wind.speed)
+			console.log(dayResults.wind.speed)
+			
+			details.append(temp, humidity, wind)
+			cardBody.append(date, icon, details)
+			forcastCard.append(cardBody)
+			todaysCardArea.append(forcastCard)
+			return
+	}
+		
+
+
+
+
+
 
 
 // todo event listener for 'submit'
@@ -143,6 +207,7 @@ $('form').on('submit', function(event){
 	// displayTodaysCard()
 	// saveCities()
 	fetchingApi(searchInput.val())
+	forcastApi(searchInput.val())
 	// displaySavedButtons()
 })
 
