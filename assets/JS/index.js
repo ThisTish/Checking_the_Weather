@@ -29,16 +29,18 @@ function displaySavedButtons(){
 		let cityButton = $('<button>',{
 			text: `${city}`,
 			addClass: "btn",
-			// click: showCityWeather()
+			click: function(){
+				showCityWeather(city)
+			}
 		})
 		cityContainer.append(cityButton)
 	}	
 }
-
-// todo needs param not sure if this is the right one to use, might want to try `${searchInput.val()}`
-function showCityWeather(cityName){
-	fetchingApi(cityName)
-	forcastApi(cityName)
+function showCityWeather(city){
+	todaysCardArea.empty()
+	fiveDayArea.empty()
+	fetchingApi(city)
+	forcastApi(city)
 }
 
 function fetchingApi(searchCity){
@@ -59,6 +61,8 @@ function fetchingApi(searchCity){
 }
 
 function displayTodaysCard (cityResults){
+	todaysCardArea.empty()
+
 	const todaysCard = $('<div>')
 	todaysCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
 	
@@ -109,6 +113,7 @@ function forcastApi(forcastedCity){
 }
 
 function displayForcastCards(cityForcast){
+	fiveDayArea.empty()
 	while(cityForcast.list.length >= 8){
 	const oneDay = cityForcast.list.splice(0,8)
 	const forcastCard = $('<div>')
@@ -162,7 +167,6 @@ function displayForcastCards(cityForcast){
 	}
 	const wind = $('<li>')
 	wind.text(`Wind: ${Math.round(findWindAverage(oneDay))} MPH`)
-	// wind.text(findWindAverage(oneDay))
 	
 	details.append(temp, humidity, wind)
 	cardBody.append(date, icon, details)
@@ -172,14 +176,22 @@ function displayForcastCards(cityForcast){
 }
 
 
-// todo event listener for 'submit'
 $('form').on('submit', function(event){
 	event.preventDefault()
-	saveCities()
+	// saveCities()
+	saveCity()
 	fetchingApi(searchInput.val())
 	forcastApi(searchInput.val())
-	// displaySavedButtons()
 })
+
+function saveCity(cityResults){
+	if(cityResults && cityResults.cod === 200){
+		saveCities(cityResults)
+	}
+	else{
+		alert('Could not find the weather. Please try again.')
+	}
+}
 
 
 $('document').ready(function(){
