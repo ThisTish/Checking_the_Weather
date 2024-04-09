@@ -90,10 +90,10 @@ function displayTodaysCard (cityResults){
 
 	const humidity = $('<li>')
 	humidity.text(`Humidity: ${cityResults.main.humidity}%`)
-
+	
 	const wind = $('<li>')
 	wind.text(`Wind: ${Math.round(cityResults.wind.speed)} MPH`)
-
+	
 	details.append(temp, humidity, wind)
 	cardBody.append(cityName, date, icon, details)
 	todaysCard.append(cardBody)
@@ -106,8 +106,8 @@ function forcastApi(forcastedCity){
 	.then(function(response){
 		if(!response.ok){
 			throw response.json()
-			}
-			return response.json()
+		}
+		return response.json()
 		})
 		.then(function(cityForcast){
 			console.log(cityForcast)
@@ -119,7 +119,7 @@ function forcastApi(forcastedCity){
 	
 
 function displayForcastCards(cityForcast){
-	fiveDayArea.empty()
+fiveDayArea.empty()
 	while(cityForcast.list.length >= 8){
 		const oneDay = cityForcast.list.splice(0,8)
 		const forcastCard = $('<div>')
@@ -140,45 +140,45 @@ function displayForcastCards(cityForcast){
 		
 		function findTempAverage(oneDay){
 			let tempSum = 0
-	for(let i = 0; i < oneDay.length; i++){
-		let tempData = oneDay[i].main.temp
-		tempSum += tempData
-	}
-	let tempAvg = tempSum/8
-	return tempAvg
-}
-const temp = $('<li>')
-temp.text(`Temperature: ${Math.round(findTempAverage(oneDay))}\u00B0F`)
+			for(let i = 0; i < oneDay.length; i++){
+			let tempData = oneDay[i].main.temp
+			tempSum += tempData
+		}
+		let tempAvg = tempSum/8
+			return tempAvg
+		}
+		const temp = $('<li>')
+		temp.text(`Temperature: ${Math.round(findTempAverage(oneDay))}\u00B0F`)
 
-function findHumidAverage(oneDay){
-	let humidSum = 0
-	for(let i = 0; i < oneDay.length; i++){
-		let humidData = oneDay[i].main.humidity
-		humidSum += humidData
-	}
-	let humidAvg = humidSum/8
-	return humidAvg
-}
-const humidity = $('<li>')
-humidity.text(`Humidity: ${Math.round(findHumidAverage(oneDay))}%`)
+		function findHumidAverage(oneDay){
+			let humidSum = 0
+			for(let i = 0; i < oneDay.length; i++){
+				let humidData = oneDay[i].main.humidity
+				humidSum += humidData
+			}
+			let humidAvg = humidSum/8
+			return humidAvg
+		}
+		const humidity = $('<li>')
+		humidity.text(`Humidity: ${Math.round(findHumidAverage(oneDay))}%`)
 
-function findWindAverage(oneDay){
-	let windSum = 0
-	for(let i = 0; i < oneDay.length; i++){
-		let windData = oneDay[i].wind.speed
-		windSum += windData
-	}
-	let windAvg = windSum/8
-	return windAvg
-}
-const wind = $('<li>')
-wind.text(`Wind: ${Math.round(findWindAverage(oneDay))} MPH`)
+		function findWindAverage(oneDay){
+			let windSum = 0
+			for(let i = 0; i < oneDay.length; i++){
+				let windData = oneDay[i].wind.speed
+				windSum += windData
+			}
+			let windAvg = windSum/8
+			return windAvg
+		}
+		const wind = $('<li>')
+		wind.text(`Wind: ${Math.round(findWindAverage(oneDay))} MPH`)
 
-details.append(temp, humidity, wind)
-cardBody.append(date, icon, details)
-forcastCard.append(cardBody)
-fiveDayArea.append(forcastCard)
-}
+		details.append(temp, humidity, wind)
+		cardBody.append(date, icon, details)
+		forcastCard.append(cardBody)
+		fiveDayArea.append(forcastCard)
+	}
 }
 
 $('form').on('submit', function(event){
@@ -190,8 +190,15 @@ $('form').on('submit', function(event){
 })
 
 
-
-
 $('document').ready(function(){
 	displaySavedButtons()
-})
+	
+	$( function() {
+		$( "#accordion" ).accordion({
+			collapsible: true
+		});
+		
+	})
+} );
+
+
