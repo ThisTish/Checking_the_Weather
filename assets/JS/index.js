@@ -28,7 +28,7 @@ function displaySavedButtons(){
 	for(let city of cities){
 		let cityButton = $('<button>',{
 			text: `${city}`,
-			addClass: "btn btn-outline-info",
+			addClass: "btn btn-outline-success font-monospace",
 			type: "button",
 			click: function(){
 				showCityWeather(city)
@@ -69,21 +69,25 @@ function displayTodaysCard (cityResults){
 	todaysCardArea.empty()
 
 	const todaysCard = $('<div>')
-	todaysCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
+	todaysCard.addClass('card text-bg-light border-warning mb-3 p-3')
 
 	const cardBody = $('<div>')
 	cardBody.addClass('card-body')
 
-	const cityName = $('<h3>')
+
+	const cityName = $('<h2>')
+	cityName.addClass('text-success')
 	cityName.text(cityResults.name)
-
-	const date = $('<h4>')
-	date.text(dayjs.unix(cityResults.dt).format('MM/DD/YYYY'))
-
+	
 	const icon = $('<i>')
 	icon.addClass(`owf owf-${cityResults.weather[0].id} owf-2x`)
 
+	const date = $('<h4>')
+	date.text(dayjs.unix(cityResults.dt).format('MM/DD/YYYY'))
+	date.addClass('text-success-emphasis')
+
 	const details = $('<ul>')
+	details.addClass('text-secondary-emphasis')
 
 	const temp = $('<li>')
 	temp.text(`Temperature: ${Math.round(cityResults.main.temp)}\u00B0F`)
@@ -120,24 +124,54 @@ function forcastApi(forcastedCity){
 
 function displayForcastCards(cityForcast){
 fiveDayArea.empty()
+
+
 	while(cityForcast.list.length >= 8){
 		const oneDay = cityForcast.list.splice(0,8)
-		const forcastCard = $('<div>')
-		forcastCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
+		// const forcastCard = $('<div>')
+		// forcastCard.addClass('card', 'bg-light', 'text-dark','mb-3', 'p-3')
 		
-		const cardBody = $('<div>')
-		cardBody.addClass('card-body')
+		// const cardBody = $('<div>')
+		// cardBody.addClass('card-body')
 		
 		const dayDetails = oneDay[0]
 		
+		const card = $('<div>')
+		card.addClass('card border-info accordion-item')
+		
+		const accordionTitle = $('<h3>')
+		accordionTitle.addClass('bg-info text-white accordion-header')
+		
+		const accordionBtn = $('<button>')
+		accordionBtn.addClass('accordion-button collapsed')
+		accordionBtn.attr({
+			'type': 'button',
+			'data-bs-toggle': 'collapse',
+			'data-bs-target': '#flush-collapseOne',
+			'aria-expanded': 'false',
+			'aria-controls': 'flush-collapseOne'
+		});
+
+		accordionTitle.append(accordionBtn)
+		
 		const date = $('<h4>')
 		date.text(dayjs.unix(dayDetails.dt).format('MM/DD/YYYY'))
+		// date.addClass('text-success')
 		
 		const icon = $('<i>')
 		icon.addClass(`owf owf-${dayDetails.weather[0].id} owf-2x`)
 		
-		const details = $('<ul>')
+		accordionBtn.append(date, icon)
+
+		const details = $('<div>')
+		details.addClass('text-success-emphasis text-end p-2 accordion-collapse collapse')
+		details.attr({
+			'id':'flush-collapseOne',
+			'data-bs-parent': '#accordion'
+		})
+
 		
+		const listDetails = $('<ul>')
 		function findTempAverage(oneDay){
 			let tempSum = 0
 			for(let i = 0; i < oneDay.length; i++){
@@ -174,12 +208,26 @@ fiveDayArea.empty()
 		const wind = $('<li>')
 		wind.text(`Wind: ${Math.round(findWindAverage(oneDay))} MPH`)
 
-		details.append(temp, humidity, wind)
-		cardBody.append(date, icon, details)
-		forcastCard.append(cardBody)
-		fiveDayArea.append(forcastCard)
+		details.append(temp,humidity,wind)
+
+
+		listDetails.append(temp,humidity, wind)
+		details.append(listDetails)
+		// accordionTitle.append(date, icon)
+		// cardBody.append(accordionTitle,details)
+		// forcastCard.append(cardBody)
+		// fiveDayArea.append(forcastCard)
+		card.append(accordionTitle, details)
+		fiveDayArea.append(card)
 	}
 }
+
+$( function() {
+	$( "#five-day-cards-containter" ).accordion({
+		collapsible: true
+	});
+	
+})
 
 $('form').on('submit', function(event){
 	event.preventDefault()
@@ -193,12 +241,6 @@ $('form').on('submit', function(event){
 $('document').ready(function(){
 	displaySavedButtons()
 	
-	$( function() {
-		$( "#accordion" ).accordion({
-			collapsible: true
-		});
-		
-	})
 } );
 
 
