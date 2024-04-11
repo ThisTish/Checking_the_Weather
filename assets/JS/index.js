@@ -56,10 +56,10 @@ function fetchingApi(searchCity){
 		return response.json()
 	})
 	.then(function(cityResults){
-		console.log(cityResults)
+		// console.log(cityResults)
+		cityContainer.empty()	
 		displayTodaysCard(cityResults)
 		saveCities(cityResults)
-		cityContainer.empty()
 		displaySavedButtons()
 	})
 		.catch((err) => console.error(`fetch problem: ${err}`))
@@ -115,7 +115,8 @@ function forcastApi(forcastedCity){
 		return response.json()
 		})
 		.then(function(cityForcast){
-			console.log(cityForcast)
+			// console.log(cityForcast)
+			fiveDayArea.empty()
 			displayForcastCards(cityForcast)
 			
 		})
@@ -123,16 +124,14 @@ function forcastApi(forcastedCity){
 }
 	
 
-// const forecastItems =dayDetails.dt: 'flush-collapseOne'dayDetails.dt: 'flush-collapseTwo'dayDetails.dt: 'flush-collapseThree'dayDetails.dt: 'flush-collapseFour'dayDetails.dt: 'flush-collapseFive'}
-// ]
-
 function displayForcastCards(cityForcast){
-fiveDayArea.empty()
-console.log(cityForcast)
+// console.log(cityForcast)
 
 while(cityForcast.list.length >= 8){
 	const oneDay = cityForcast.list.splice(0,8)
 	const dayDetails = oneDay[0]
+	// console.log(oneDay)
+	// console.log(dayDetails)
 	
 		const forcastCard = $('<div>')
 		forcastCard.addClass('card border-info text-dark mb-3 p-3 accordion accordion-flush bg-light').attr('#accordion')
@@ -216,8 +215,8 @@ $('form').on('submit', function(event){
 	event.preventDefault()
 	fetchingApi(searchInput.val())
 	forcastApi(searchInput.val())
+
 	
-	// validation()
 })
 
 
