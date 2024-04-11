@@ -49,3 +49,13 @@ fetch(queryURL)
 // *MDN PRACTICE
 
 
+//* accordion building?
+
+const forecastItems = [
+	{id: 'flush-collapseOne', title:'Day One', content: "placeholder"},
+	{id: 'flush-collapseTwo', title:'Day Two', content: "placeholder"},
+	{id: 'flush-collapseThree', title:'Day Three', content: "placeholder"},
+	{id: 'flush-collapseFour', title:'Day Four', content: "placeholder"},
+	{id: 'flush-collapseFive', title:'Day Five', content: "placeholder"}
+]
+
