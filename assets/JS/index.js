@@ -16,7 +16,7 @@ function getCities() {
 function saveCities() {
 	let cities = getCities()
 	const searchedCity = searchInput.val()
-	if(!cities.includes(searchedCity)){
+	if(searchedCity !== '' && !cities.includes(searchedCity)){
 		cities.push(searchedCity)
 	}
 	localStorage.setItem('cities', JSON.stringify(cities))
